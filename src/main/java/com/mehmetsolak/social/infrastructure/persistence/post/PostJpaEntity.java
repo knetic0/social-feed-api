@@ -44,7 +44,7 @@ public class PostJpaEntity {
 
     private PostJpaEntity() {}
 
-    private PostJpaEntity(
+    public PostJpaEntity(
             UUID id,
             UUID authorId,
             String body,
