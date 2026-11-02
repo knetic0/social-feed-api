@@ -1,15 +1,23 @@
 package com.mehmetsolak.social.infrastructure.persistence.post;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "posts")
+@Table(
+        name = "posts",
+        indexes = {
+                @Index(
+                        name = "idx_posts_author_created",
+                        columnList = "author_id, created_at DESC, id DESC"
+                ),
+                @Index(
+                        name = "idx_posts_created",
+                        columnList = "created_at DESC, id DESC"
+                )
+        })
 public class PostJpaEntity {
 
     @Id
