@@ -1,8 +1,8 @@
 package com.mehmetsolak.social.domain.comment.exception;
 
-import com.mehmetsolak.social.domain.shared.DomainException;
+import com.mehmetsolak.social.domain.shared.DomainValidationException;
 
-public class InvalidCommentBodyException extends DomainException {
+public class InvalidCommentBodyException extends DomainValidationException {
     public InvalidCommentBodyException(String message) {
         super(message);
     }
