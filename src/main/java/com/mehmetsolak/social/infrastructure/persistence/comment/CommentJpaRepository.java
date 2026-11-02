@@ -1,11 +1,10 @@
 package com.mehmetsolak.social.infrastructure.persistence.comment;
 
-import com.mehmetsolak.social.domain.comment.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
 @Repository
-public interface CommentJpaRepository extends JpaRepository<Comment, UUID> {
+public interface CommentJpaRepository extends JpaRepository<CommentJpaEntity, UUID> {
 }

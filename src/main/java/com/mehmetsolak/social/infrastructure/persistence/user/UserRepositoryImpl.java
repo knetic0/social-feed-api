@@ -22,4 +22,14 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> findByHandle(Handle handle) {
         return repository.findByHandle(handle.value()).map(mapper::toDomain);
     }
+
+    @Override
+    public boolean existsByHandle(Handle handle) {
+        return repository.existsByHandle(handle.value());
+    }
+
+    @Override
+    public void save(User user) {
+        repository.save(mapper.toEntity(user));
+    }
 }

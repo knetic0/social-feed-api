@@ -21,4 +21,14 @@ public final class UserMapper {
                 entity.getCreatedAt()
         );
     }
+
+    public UserJpaEntity toEntity(User user) {
+        return new UserJpaEntity(
+                user.getId().value(),
+                user.getHandle().value(),
+                user.getPasswordHash().value(),
+                user.isCelebrity(),
+                user.getCreatedAt()
+        );
+    }
 }

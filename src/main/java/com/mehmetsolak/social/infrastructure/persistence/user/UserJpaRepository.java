@@ -9,4 +9,5 @@ import java.util.UUID;
 @Repository
 public interface UserJpaRepository extends JpaRepository<UserJpaEntity, UUID> {
     Optional<UserJpaEntity> findByHandle(String handle);
+    boolean existsByHandle(String handle);
 }
