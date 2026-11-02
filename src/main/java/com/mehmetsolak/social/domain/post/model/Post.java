@@ -1,5 +1,6 @@
 package com.mehmetsolak.social.domain.post.model;
 
+import com.mehmetsolak.social.domain.post.events.PostCreatedEvent;
 import com.mehmetsolak.social.domain.post.exception.InvalidCommentCountException;
 import com.mehmetsolak.social.domain.post.exception.InvalidLikeCountException;
 import com.mehmetsolak.social.domain.post.exception.PostAlreadyDeletedException;
@@ -9,6 +10,7 @@ import com.mehmetsolak.social.domain.shared.AggregateRoot;
 import com.mehmetsolak.social.domain.user.vobj.UserId;
 
 import java.time.Instant;
+import java.util.UUID;
 
 public final class Post extends AggregateRoot<PostId> {
 
@@ -48,7 +50,14 @@ public final class Post extends AggregateRoot<PostId> {
     }
 
     public static Post of(UserId authorId, PostBody body) {
-        return new Post(PostId.newId(), authorId, body, Instant.now());
+        var post = new Post(PostId.newId(), authorId, body, Instant.now());
+        post.registerEvent(new PostCreatedEvent(
+                UUID.randomUUID(),
+                post.getId().value(),
+                authorId.value(),
+                post.getCreatedAt()
+        ));
+        return post;
     }
 
     public static Post rehydrate(
