@@ -1,15 +1,19 @@
 package com.mehmetsolak.social.infrastructure.persistence.user;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(
+        name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_users_handle",
+                        columnNames = "handle"
+                )
+        })
 public class UserJpaEntity {
 
     @Id
@@ -19,7 +23,7 @@ public class UserJpaEntity {
     @Column(nullable = false, length = 50)
     private String handle;
 
-    @Column(nullable = false, name = "password_hash")
+    @Column(nullable = false, name = "password_hash", length = 255)
     private String passwordHash;
 
     @Column(nullable = false, name = "is_celebrity")
