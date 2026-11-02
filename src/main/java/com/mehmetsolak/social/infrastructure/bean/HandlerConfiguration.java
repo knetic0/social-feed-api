@@ -10,6 +10,8 @@ import com.mehmetsolak.social.application.features.auth.ports.PasswordHasher;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommand;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommandHandler;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommandResponse;
+import com.mehmetsolak.social.application.features.post.commands.distribute.DistributePostCommand;
+import com.mehmetsolak.social.application.features.post.commands.distribute.DistributePostCommandHandler;
 import com.mehmetsolak.social.application.shared.ports.CurrentUser;
 import com.mehmetsolak.social.application.shared.ports.DomainEventPublisher;
 import com.mehmetsolak.social.domain.post.repository.PostRepository;
@@ -51,5 +53,10 @@ public class HandlerConfiguration {
         return command -> transactionTemplate.execute(
                 _ -> handler.execute(command)
         );
+    }
+
+    @Bean
+    public CommandHandler<DistributePostCommand, Void> distributePostCommandHandler() {
+        return new DistributePostCommandHandler();
     }
 }
