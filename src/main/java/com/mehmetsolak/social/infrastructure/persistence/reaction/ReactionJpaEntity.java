@@ -7,7 +7,20 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "reactions")
+@Table(
+        name = "reactions",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_reactions_user_post",
+                        columnNames = {"user_id", "post_id"}
+                )
+        },
+        indexes = {
+                @Index(
+                        name = "idx_reactions_post_id",
+                        columnList = "post_id"
+                )
+        })
 public class ReactionJpaEntity {
 
     @Id
