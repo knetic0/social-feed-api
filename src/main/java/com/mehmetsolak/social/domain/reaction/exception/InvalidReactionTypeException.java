@@ -1,6 +1,6 @@
 package com.mehmetsolak.social.domain.reaction.exception;
 
-import com.mehmetsolak.social.domain.shared.DomainValidationException;
+import com.mehmetsolak.social.domain.shared.exceptions.DomainValidationException;
 
 public class InvalidReactionTypeException extends DomainValidationException {
     public InvalidReactionTypeException(String message) {

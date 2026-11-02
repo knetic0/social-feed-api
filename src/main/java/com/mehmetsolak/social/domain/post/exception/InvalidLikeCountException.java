@@ -1,6 +1,6 @@
 package com.mehmetsolak.social.domain.post.exception;
 
-import com.mehmetsolak.social.domain.shared.DomainValidationException;
+import com.mehmetsolak.social.domain.shared.exceptions.DomainValidationException;
 
 public class InvalidLikeCountException extends DomainValidationException {
     public InvalidLikeCountException(String message) {

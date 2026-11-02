@@ -1,7 +1,7 @@
 package com.mehmetsolak.social.presentation.api;
 
-import com.mehmetsolak.social.domain.shared.DomainConflictException;
-import com.mehmetsolak.social.domain.shared.DomainValidationException;
+import com.mehmetsolak.social.domain.shared.exceptions.DomainConflictException;
+import com.mehmetsolak.social.domain.shared.exceptions.DomainValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
