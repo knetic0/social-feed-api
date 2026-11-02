@@ -60,6 +60,8 @@ public final class User extends AggregateRoot<UserId> {
         return handle;
     }
 
+    public PasswordHash getPasswordHash() { return passwordHash; }
+
     public boolean isCelebrity() {
         return isCelebrity;
     }
