@@ -39,13 +39,13 @@ public class HandlerConfiguration {
     public CommandHandler<CreatePostCommand, CreatePostCommandResponse> createPostCommandHandler(
             PostRepository postRepository,
             CurrentUser currentUser,
-            DomainEventPublisher eventPublisher,
+            DomainEventPublisher domainEventPublisher,
             TransactionTemplate transactionTemplate
     ) {
         var handler = new CreatePostCommandHandler(
                 postRepository,
                 currentUser,
-                eventPublisher
+                domainEventPublisher
         );
 
         return command -> transactionTemplate.execute(
