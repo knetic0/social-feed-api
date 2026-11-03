@@ -39,6 +39,6 @@ public class CreatePostCommandHandler
             domainEventPublisher.publish(event);
         post.clearDomainEvents();
 
-        return new CreatePostCommandResponse();
+        return new CreatePostCommandResponse(post.getId().value());
     }
 }
