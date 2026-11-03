@@ -7,11 +7,13 @@ import com.mehmetsolak.social.application.features.auth.commands.register.Regist
 import com.mehmetsolak.social.application.features.auth.commands.register.RegisterCommandHandler;
 import com.mehmetsolak.social.application.features.auth.ports.AuthenticationPort;
 import com.mehmetsolak.social.application.features.auth.ports.PasswordHasher;
+import com.mehmetsolak.social.application.features.feed.ports.FollowerReader;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommand;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommandHandler;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommandResponse;
-import com.mehmetsolak.social.application.features.post.commands.distribute.DistributePostCommand;
-import com.mehmetsolak.social.application.features.post.commands.distribute.DistributePostCommandHandler;
+import com.mehmetsolak.social.application.features.feed.commands.distribute.DistributePostCommand;
+import com.mehmetsolak.social.application.features.feed.commands.distribute.DistributePostCommandHandler;
+import com.mehmetsolak.social.application.features.feed.ports.FeedWriter;
 import com.mehmetsolak.social.application.shared.ports.CurrentUser;
 import com.mehmetsolak.social.application.shared.ports.DomainEventPublisher;
 import com.mehmetsolak.social.domain.post.repository.PostRepository;
@@ -56,7 +58,9 @@ public class HandlerConfiguration {
     }
 
     @Bean
-    public CommandHandler<DistributePostCommand, Void> distributePostCommandHandler() {
-        return new DistributePostCommandHandler();
+    public CommandHandler<DistributePostCommand, Void> distributePostCommandHandler(
+            FeedWriter feedWriter, FollowerReader followerReader
+    ) {
+        return new DistributePostCommandHandler(feedWriter, followerReader);
     }
 }

@@ -1,4 +1,4 @@
-package com.mehmetsolak.social.application.features.post.commands.distribute;
+package com.mehmetsolak.social.application.features.feed.commands.distribute;
 
 import com.mehmetsolak.social.application.cqrs.Command;
 

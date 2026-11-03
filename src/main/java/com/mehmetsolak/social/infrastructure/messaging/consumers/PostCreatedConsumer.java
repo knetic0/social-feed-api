@@ -1,7 +1,7 @@
 package com.mehmetsolak.social.infrastructure.messaging.consumers;
 
 import com.mehmetsolak.social.application.cqrs.CommandHandler;
-import com.mehmetsolak.social.application.features.post.commands.distribute.DistributePostCommand;
+import com.mehmetsolak.social.application.features.feed.commands.distribute.DistributePostCommand;
 import com.mehmetsolak.social.domain.post.events.PostCreatedEvent;
 import com.mehmetsolak.social.infrastructure.messaging.RabbitMqConstants;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
