@@ -1,8 +1,6 @@
 package com.mehmetsolak.social.application.features.post.commands.create;
 
-import com.mehmetsolak.social.application.cqrs.Command;
+import com.mehmetsolak.social.application.cqrs.IdempotentCommand;
 
-import java.util.UUID;
-
-public record CreatePostCommand(
-        String body, UUID idempotencyKey) implements Command<CreatePostCommandResponse> { }
+public record CreatePostCommand(String body, String idempotencyKey)
+        implements IdempotentCommand<CreatePostCommandResponse> { }

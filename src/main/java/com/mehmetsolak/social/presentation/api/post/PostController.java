@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.UUID;
 
 @Tag(
         name = "Post",
@@ -31,13 +30,12 @@ public class PostController {
 
     @Operation(
             summary = "Create a new post",
-            description = "Creates a new post",
-            security = {}
+            description = "Creates a new post"
     )
     @PostMapping("/")
     @Authenticated
     public ResponseEntity<CreatePostResponse> create(
-            @RequestHeader("Idempotency-Key") UUID idempotencyKey,
+            @RequestHeader("Idempotency-Key") String idempotencyKey,
             @Valid @RequestBody CreatePostRequest request) {
         CreatePostCommand command = new CreatePostCommand(request.body(), idempotencyKey);
         var commandResponse = createPostCommandHandler.execute(command);

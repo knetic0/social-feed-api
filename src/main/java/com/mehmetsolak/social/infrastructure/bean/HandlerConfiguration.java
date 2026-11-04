@@ -18,9 +18,11 @@ import com.mehmetsolak.social.application.shared.ports.CurrentUser;
 import com.mehmetsolak.social.application.shared.ports.DomainEventPublisher;
 import com.mehmetsolak.social.domain.post.repository.PostRepository;
 import com.mehmetsolak.social.domain.user.repository.UserRepository;
+import com.mehmetsolak.social.infrastructure.idempotency.IdempotentCommandHandler;
+import com.mehmetsolak.social.infrastructure.idempotency.PostgresIdempotencyExecutor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.support.TransactionTemplate;
+import tools.jackson.databind.json.JsonMapper;
 
 @Configuration
 public class HandlerConfiguration {
@@ -44,7 +46,8 @@ public class HandlerConfiguration {
             PostRepository postRepository,
             CurrentUser currentUser,
             DomainEventPublisher domainEventPublisher,
-            TransactionTemplate transactionTemplate
+            PostgresIdempotencyExecutor postgresIdempotencyExecutor,
+            JsonMapper objectMapper
     ) {
         var handler = new CreatePostCommandHandler(
                 postRepository,
@@ -52,9 +55,13 @@ public class HandlerConfiguration {
                 domainEventPublisher
         );
 
-        return command -> transactionTemplate.execute(
-                _ -> handler.execute(command)
-        );
+        return new IdempotentCommandHandler<>(
+                handler,
+                "post.create",
+                CreatePostCommandResponse.class,
+                currentUser,
+                postgresIdempotencyExecutor,
+                objectMapper);
     }
 
     @Bean

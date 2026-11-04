@@ -1,9 +1,13 @@
 package com.mehmetsolak.social.presentation.api;
 
 import com.mehmetsolak.social.application.shared.exception.ApplicationConflictException;
+import com.mehmetsolak.social.application.shared.exception.IdempotencyKeyReusedException;
+import com.mehmetsolak.social.application.shared.exception.IdempotencyRequestInProgressException;
+import com.mehmetsolak.social.application.shared.exception.InvalidIdempotencyKeyException;
 import com.mehmetsolak.social.domain.shared.exceptions.DomainConflictException;
 import com.mehmetsolak.social.domain.shared.exceptions.DomainValidationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.validation.FieldError;
@@ -59,6 +63,34 @@ public class GlobalExceptionHandler {
     ProblemDetail handleApplicationConflictException(ApplicationConflictException exception) {
         return ProblemDetail.forStatusAndDetail(
                 HttpStatus.CONFLICT, exception.getMessage()
+        );
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    ProblemDetail handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.CONFLICT, "The request conflicts with existing data."
+        );
+    }
+
+    @ExceptionHandler(IdempotencyKeyReusedException.class)
+    ProblemDetail handleIdempotencyKeyReusedException(IdempotencyKeyReusedException exception) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.UNPROCESSABLE_CONTENT, "Idempotency key was already used with a different request"
+        );
+    }
+
+    @ExceptionHandler(IdempotencyRequestInProgressException.class)
+    ProblemDetail handleIdempotencyRequestInProgressException(IdempotencyRequestInProgressException exception) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.CONFLICT, "The process is still being processed"
+        );
+    }
+
+    @ExceptionHandler(InvalidIdempotencyKeyException.class)
+    ProblemDetail handleInvalidIdempotencyKeyException(InvalidIdempotencyKeyException exception) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST, "Invalid key."
         );
     }
 }
