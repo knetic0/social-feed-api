@@ -19,7 +19,7 @@ import java.net.URI;
         description = "Endpoints for post CRUD"
 )
 @RestController
-@RequestMapping("/api/v1/post")
+@RequestMapping("/api/v1/posts")
 public class PostController {
 
     private final CommandHandler<CreatePostCommand, CreatePostCommandResponse> createPostCommandHandler;

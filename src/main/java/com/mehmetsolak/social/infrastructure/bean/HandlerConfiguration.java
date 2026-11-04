@@ -8,6 +8,9 @@ import com.mehmetsolak.social.application.features.auth.commands.register.Regist
 import com.mehmetsolak.social.application.features.auth.ports.AuthenticationPort;
 import com.mehmetsolak.social.application.features.auth.ports.PasswordHasher;
 import com.mehmetsolak.social.application.features.feed.ports.FollowerReader;
+import com.mehmetsolak.social.application.features.follow.commands.followuser.FollowUserCommand;
+import com.mehmetsolak.social.application.features.follow.commands.followuser.FollowUserCommandHandler;
+import com.mehmetsolak.social.application.features.follow.ports.UserLookupPort;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommand;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommandHandler;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommandResponse;
@@ -16,6 +19,7 @@ import com.mehmetsolak.social.application.features.feed.commands.distribute.Dist
 import com.mehmetsolak.social.application.features.feed.ports.FeedWriter;
 import com.mehmetsolak.social.application.shared.ports.CurrentUser;
 import com.mehmetsolak.social.application.shared.ports.DomainEventPublisher;
+import com.mehmetsolak.social.domain.follow.repository.FollowRepository;
 import com.mehmetsolak.social.domain.post.repository.PostRepository;
 import com.mehmetsolak.social.domain.user.repository.UserRepository;
 import com.mehmetsolak.social.infrastructure.idempotency.IdempotentCommandHandler;
@@ -69,5 +73,14 @@ public class HandlerConfiguration {
             FeedWriter feedWriter, FollowerReader followerReader
     ) {
         return new DistributePostCommandHandler(feedWriter, followerReader);
+    }
+
+    @Bean
+    public CommandHandler<FollowUserCommand, Void> followUserCommandHandler(
+            UserLookupPort userLookupPort,
+            FollowRepository followRepository,
+            DomainEventPublisher domainEventPublisher
+    ) {
+        return new FollowUserCommandHandler(userLookupPort, followRepository, domainEventPublisher);
     }
 }

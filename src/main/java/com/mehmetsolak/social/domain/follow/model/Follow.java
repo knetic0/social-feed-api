@@ -1,5 +1,6 @@
 package com.mehmetsolak.social.domain.follow.model;
 
+import com.mehmetsolak.social.domain.follow.events.UserFollowedEvent;
 import com.mehmetsolak.social.domain.follow.exception.CannotFollowYourselfException;
 import com.mehmetsolak.social.domain.shared.AggregateRoot;
 import com.mehmetsolak.social.domain.user.vobj.UserId;
@@ -33,7 +34,15 @@ public final class Follow extends AggregateRoot<UUID> {
     }
 
     public static Follow of(UserId followerId, UserId followeeId) {
-        return new Follow(UUID.randomUUID(), followerId, followeeId, Instant.now());
+        var now = Instant.now();
+        var follow = new Follow(UUID.randomUUID(), followerId, followeeId, now);
+        follow.registerEvent(new UserFollowedEvent(
+                UUID.randomUUID(),
+                followerId,
+                followeeId,
+                now
+        ));
+        return follow;
     }
 
     public static Follow rehydrate(
