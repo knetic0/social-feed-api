@@ -3,6 +3,7 @@ package com.mehmetsolak.social.infrastructure.persistence.user;
 import com.mehmetsolak.social.domain.user.model.User;
 import com.mehmetsolak.social.domain.user.repository.UserRepository;
 import com.mehmetsolak.social.domain.user.vobj.Handle;
+import com.mehmetsolak.social.domain.user.vobj.UserId;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -26,6 +27,11 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public boolean existsByHandle(Handle handle) {
         return repository.existsByHandle(handle.value());
+    }
+
+    @Override
+    public boolean existsById(UserId userId) {
+        return repository.existsById(userId.value());
     }
 
     @Override

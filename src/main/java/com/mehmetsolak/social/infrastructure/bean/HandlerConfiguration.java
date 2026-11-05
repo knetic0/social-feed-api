@@ -1,13 +1,19 @@
 package com.mehmetsolak.social.infrastructure.bean;
 
 import com.mehmetsolak.social.application.cqrs.CommandHandler;
+import com.mehmetsolak.social.application.cqrs.QueryHandler;
 import com.mehmetsolak.social.application.features.auth.commands.login.LoginCommand;
 import com.mehmetsolak.social.application.features.auth.commands.login.LoginCommandHandler;
 import com.mehmetsolak.social.application.features.auth.commands.register.RegisterCommand;
 import com.mehmetsolak.social.application.features.auth.commands.register.RegisterCommandHandler;
 import com.mehmetsolak.social.application.features.auth.ports.AuthenticationPort;
 import com.mehmetsolak.social.application.features.auth.ports.PasswordHasher;
+import com.mehmetsolak.social.application.features.feed.ports.FeedReader;
 import com.mehmetsolak.social.application.features.feed.ports.FollowerReader;
+import com.mehmetsolak.social.application.features.feed.ports.PostSummaryReader;
+import com.mehmetsolak.social.application.features.feed.queries.get.GetFeedQuery;
+import com.mehmetsolak.social.application.features.feed.queries.get.GetFeedQueryHandler;
+import com.mehmetsolak.social.application.features.feed.queries.get.GetFeedQueryResponse;
 import com.mehmetsolak.social.application.features.follow.commands.followuser.FollowUserCommand;
 import com.mehmetsolak.social.application.features.follow.commands.followuser.FollowUserCommandHandler;
 import com.mehmetsolak.social.application.features.follow.ports.UserLookupPort;
@@ -26,6 +32,7 @@ import com.mehmetsolak.social.infrastructure.idempotency.IdempotentCommandHandle
 import com.mehmetsolak.social.infrastructure.idempotency.PostgresIdempotencyExecutor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.support.TransactionTemplate;
 import tools.jackson.databind.json.JsonMapper;
 
 @Configuration
@@ -79,8 +86,17 @@ public class HandlerConfiguration {
     public CommandHandler<FollowUserCommand, Void> followUserCommandHandler(
             UserLookupPort userLookupPort,
             FollowRepository followRepository,
-            DomainEventPublisher domainEventPublisher
+            DomainEventPublisher domainEventPublisher,
+            TransactionTemplate transactionTemplate
     ) {
-        return new FollowUserCommandHandler(userLookupPort, followRepository, domainEventPublisher);
+        var handler = new FollowUserCommandHandler(userLookupPort, followRepository, domainEventPublisher);
+        return command -> transactionTemplate.execute(status -> handler.execute(command));
+    }
+
+    @Bean
+    public QueryHandler<GetFeedQuery, GetFeedQueryResponse> getFeedQueryHandler(
+            FeedReader feedReader, PostSummaryReader postSummaryReader
+    ) {
+        return new GetFeedQueryHandler(feedReader, postSummaryReader);
     }
 }
