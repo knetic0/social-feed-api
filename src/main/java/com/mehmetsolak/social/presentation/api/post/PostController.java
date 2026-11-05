@@ -41,7 +41,7 @@ public class PostController {
         var commandResponse = createPostCommandHandler.execute(command);
         var response = new CreatePostResponse(commandResponse.id());
         return ResponseEntity
-                .created(URI.create("/api/v1/post/" + response.id()))
+                .created(URI.create("/api/v1/posts/" + response.id()))
                 .body(response);
     }
 }
