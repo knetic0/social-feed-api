@@ -6,6 +6,7 @@ import com.mehmetsolak.social.domain.post.vobj.PostId;
 import com.mehmetsolak.social.domain.user.vobj.UserId;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -28,5 +29,11 @@ public class PostRepositoryImpl implements PostRepository {
     public Optional<Post> findById(PostId postId) {
         return repository.findByIdAndDeletedAtIsNull(postId.value())
                 .map(mapper::toDomain);
+    }
+
+    @Override
+    public List<Post> findByAuthorId(UserId authorId) {
+        return repository.findByAuthorId(authorId.value())
+                .stream().map(mapper::toDomain).toList();
     }
 }

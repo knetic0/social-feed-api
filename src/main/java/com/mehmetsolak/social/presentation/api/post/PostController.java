@@ -7,10 +7,13 @@ import com.mehmetsolak.social.application.features.post.commands.create.CreatePo
 import com.mehmetsolak.social.application.features.post.commands.delete.DeletePostCommand;
 import com.mehmetsolak.social.application.features.post.queries.get.GetPostQuery;
 import com.mehmetsolak.social.application.features.post.queries.get.GetPostQueryResponse;
+import com.mehmetsolak.social.application.features.post.queries.list.GetPostsQuery;
+import com.mehmetsolak.social.application.features.post.queries.list.GetPostsQueryResponse;
 import com.mehmetsolak.social.application.shared.ports.CurrentUser;
 import com.mehmetsolak.social.presentation.api.post.dtos.request.CreatePostRequest;
 import com.mehmetsolak.social.presentation.api.post.dtos.response.CreatePostResponse;
 import com.mehmetsolak.social.presentation.api.post.dtos.response.PostDetailsResponse;
+import com.mehmetsolak.social.presentation.api.post.dtos.response.PostsResponse;
 import com.mehmetsolak.social.presentation.security.Authenticated;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,6 +36,7 @@ public class PostController {
     private final CommandHandler<CreatePostCommand, CreatePostCommandResponse> createPostCommandHandler;
     private final QueryHandler<GetPostQuery, GetPostQueryResponse> getPostQueryHandler;
     private final CommandHandler<DeletePostCommand, Void> deletePostCommandHandler;
+    private final QueryHandler<GetPostsQuery, GetPostsQueryResponse> getPostsQueryHandler;
 
     private final CurrentUser currentUser;
 
@@ -40,10 +44,12 @@ public class PostController {
             CommandHandler<CreatePostCommand, CreatePostCommandResponse> createPostCommandHandler,
             QueryHandler<GetPostQuery, GetPostQueryResponse> getPostQueryHandler,
             CommandHandler<DeletePostCommand, Void> deletePostCommandHandler,
+            QueryHandler<GetPostsQuery, GetPostsQueryResponse> getPostsQueryHandler,
             CurrentUser currentUser) {
         this.createPostCommandHandler = createPostCommandHandler;
         this.getPostQueryHandler = getPostQueryHandler;
         this.deletePostCommandHandler = deletePostCommandHandler;
+        this.getPostsQueryHandler = getPostsQueryHandler;
         this.currentUser = currentUser;
     }
 
@@ -65,7 +71,7 @@ public class PostController {
 
     @Operation(
             summary = "Get post by id",
-            description = "Users can access their posts with id"
+            description = "Users can access post with id"
     )
     @GetMapping("/{id}")
     public ResponseEntity<PostDetailsResponse> get(@PathVariable UUID id) {
@@ -80,6 +86,29 @@ public class PostController {
                 result.commentCount()
         );
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "Get posts with params",
+            description = "Users can access posts with params"
+    )
+    @GetMapping
+    public ResponseEntity<PostsResponse> list(
+            @RequestParam(name = "author") UUID authorId
+    ) {
+        var query = new GetPostsQuery(authorId);
+        var result = getPostsQueryHandler.execute(query);
+        var items = result.items().stream().map(
+                item -> new PostDetailsResponse(
+                        item.id(),
+                        item.authorId(),
+                        item.body(),
+                        item.createdAt(),
+                        item.likeCount(),
+                        item.commentCount()
+                )
+        ).toList();
+        return ResponseEntity.ok(new PostsResponse(items));
     }
 
     @Operation(

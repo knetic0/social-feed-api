@@ -22,4 +22,6 @@ public interface PostJpaRepository extends JpaRepository<PostJpaEntity, UUID> {
     List<PostSummaryReader.PostSummary> findSummariesByIds(@Param("ids") List<UUID> ids);
 
     Optional<PostJpaEntity> findByIdAndDeletedAtIsNull(UUID id);
+
+    List<PostJpaEntity> findByAuthorId(UUID authorId);
 }

@@ -28,6 +28,9 @@ import com.mehmetsolak.social.application.features.post.commands.delete.DeletePo
 import com.mehmetsolak.social.application.features.post.queries.get.GetPostQuery;
 import com.mehmetsolak.social.application.features.post.queries.get.GetPostQueryHandler;
 import com.mehmetsolak.social.application.features.post.queries.get.GetPostQueryResponse;
+import com.mehmetsolak.social.application.features.post.queries.list.GetPostsQuery;
+import com.mehmetsolak.social.application.features.post.queries.list.GetPostsQueryHandler;
+import com.mehmetsolak.social.application.features.post.queries.list.GetPostsQueryResponse;
 import com.mehmetsolak.social.application.shared.ports.CurrentUser;
 import com.mehmetsolak.social.application.shared.ports.DomainEventPublisher;
 import com.mehmetsolak.social.domain.follow.repository.FollowRepository;
@@ -123,5 +126,12 @@ public class HandlerConfiguration {
         return command -> transactionTemplate.execute(
                 _ -> handler.execute(command)
         );
+    }
+
+    @Bean
+    public QueryHandler<GetPostsQuery, GetPostsQueryResponse> getPostsQueryHandler(
+            PostRepository postRepository
+    ) {
+        return new GetPostsQueryHandler(postRepository);
     }
 }
