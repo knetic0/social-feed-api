@@ -16,7 +16,6 @@ import com.mehmetsolak.social.application.features.feed.queries.get.GetFeedQuery
 import com.mehmetsolak.social.application.features.feed.queries.get.GetFeedQueryResponse;
 import com.mehmetsolak.social.application.features.follow.commands.followuser.FollowUserCommand;
 import com.mehmetsolak.social.application.features.follow.commands.followuser.FollowUserCommandHandler;
-import com.mehmetsolak.social.application.features.follow.ports.UserLookupPort;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommand;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommandHandler;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommandResponse;
@@ -92,12 +91,12 @@ public class HandlerConfiguration {
 
     @Bean
     public CommandHandler<FollowUserCommand, Void> followUserCommandHandler(
-            UserLookupPort userLookupPort,
+            UserRepository userRepository,
             FollowRepository followRepository,
             DomainEventPublisher domainEventPublisher,
             TransactionTemplate transactionTemplate
     ) {
-        var handler = new FollowUserCommandHandler(userLookupPort, followRepository, domainEventPublisher);
+        var handler = new FollowUserCommandHandler(userRepository, followRepository, domainEventPublisher);
         return command -> transactionTemplate.execute(
                 _ -> handler.execute(command));
     }
