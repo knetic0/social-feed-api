@@ -1,9 +1,6 @@
 package com.mehmetsolak.social.presentation.api;
 
-import com.mehmetsolak.social.application.shared.exception.ApplicationConflictException;
-import com.mehmetsolak.social.application.shared.exception.IdempotencyKeyReusedException;
-import com.mehmetsolak.social.application.shared.exception.IdempotencyRequestInProgressException;
-import com.mehmetsolak.social.application.shared.exception.InvalidIdempotencyKeyException;
+import com.mehmetsolak.social.application.shared.exception.*;
 import com.mehmetsolak.social.domain.shared.exceptions.DomainConflictException;
 import com.mehmetsolak.social.domain.shared.exceptions.DomainValidationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -91,6 +88,13 @@ public class GlobalExceptionHandler {
     ProblemDetail handleInvalidIdempotencyKeyException(InvalidIdempotencyKeyException exception) {
         return ProblemDetail.forStatusAndDetail(
                 HttpStatus.BAD_REQUEST, "Invalid key."
+        );
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    ProblemDetail handleNotFoundException(NotFoundException exception) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND, exception.getMessage()
         );
     }
 }
