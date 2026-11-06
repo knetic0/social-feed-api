@@ -2,6 +2,7 @@ package com.mehmetsolak.social.presentation.api;
 
 import com.mehmetsolak.social.application.shared.exception.*;
 import com.mehmetsolak.social.domain.shared.exceptions.DomainConflictException;
+import com.mehmetsolak.social.domain.shared.exceptions.DomainNotAllowedException;
 import com.mehmetsolak.social.domain.shared.exceptions.DomainValidationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -98,8 +99,8 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(NotAllowedException.class)
-    ProblemDetail handleNotAllowedException(NotAllowedException exception) {
+    @ExceptionHandler(DomainNotAllowedException.class)
+    ProblemDetail handleNotAllowedException(DomainNotAllowedException exception) {
         return ProblemDetail.forStatusAndDetail(
                 HttpStatus.FORBIDDEN, exception.getMessage()
         );

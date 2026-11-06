@@ -1,6 +1,6 @@
 package com.mehmetsolak.social.domain.post.model;
 
-import com.mehmetsolak.social.application.features.post.exception.PostDeletionNotAllowedException;
+import com.mehmetsolak.social.domain.post.exception.PostDeletionNotAllowedException;
 import com.mehmetsolak.social.domain.post.events.PostCreatedEvent;
 import com.mehmetsolak.social.domain.post.exception.InvalidCommentCountException;
 import com.mehmetsolak.social.domain.post.exception.InvalidLikeCountException;
