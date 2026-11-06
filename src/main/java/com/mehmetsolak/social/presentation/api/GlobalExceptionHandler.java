@@ -97,4 +97,11 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND, exception.getMessage()
         );
     }
+
+    @ExceptionHandler(NotAllowedException.class)
+    ProblemDetail handleNotAllowedException(NotAllowedException exception) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.FORBIDDEN, exception.getMessage()
+        );
+    }
 }

@@ -4,8 +4,10 @@ import com.mehmetsolak.social.application.cqrs.CommandHandler;
 import com.mehmetsolak.social.application.cqrs.QueryHandler;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommand;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommandResponse;
+import com.mehmetsolak.social.application.features.post.commands.delete.DeletePostCommand;
 import com.mehmetsolak.social.application.features.post.queries.get.GetPostQuery;
 import com.mehmetsolak.social.application.features.post.queries.get.GetPostQueryResponse;
+import com.mehmetsolak.social.application.shared.ports.CurrentUser;
 import com.mehmetsolak.social.presentation.api.post.dtos.request.CreatePostRequest;
 import com.mehmetsolak.social.presentation.api.post.dtos.response.CreatePostResponse;
 import com.mehmetsolak.social.presentation.api.post.dtos.response.PostDetailsResponse;
@@ -30,12 +32,19 @@ public class PostController {
 
     private final CommandHandler<CreatePostCommand, CreatePostCommandResponse> createPostCommandHandler;
     private final QueryHandler<GetPostQuery, GetPostQueryResponse> getPostQueryHandler;
+    private final CommandHandler<DeletePostCommand, Void> deletePostCommandHandler;
+
+    private final CurrentUser currentUser;
 
     public PostController(
             CommandHandler<CreatePostCommand, CreatePostCommandResponse> createPostCommandHandler,
-            QueryHandler<GetPostQuery, GetPostQueryResponse> getPostQueryHandler) {
+            QueryHandler<GetPostQuery, GetPostQueryResponse> getPostQueryHandler,
+            CommandHandler<DeletePostCommand, Void> deletePostCommandHandler,
+            CurrentUser currentUser) {
         this.createPostCommandHandler = createPostCommandHandler;
         this.getPostQueryHandler = getPostQueryHandler;
+        this.deletePostCommandHandler = deletePostCommandHandler;
+        this.currentUser = currentUser;
     }
 
     @Operation(
@@ -71,5 +80,16 @@ public class PostController {
                 result.commentCount()
         );
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "Delete post by id",
+            description = "Users can delete their posts by id"
+    )
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        var command = new DeletePostCommand(currentUser.getCurrentUserId(), id);
+        deletePostCommandHandler.execute(command);
+        return ResponseEntity.noContent().build();
     }
 }

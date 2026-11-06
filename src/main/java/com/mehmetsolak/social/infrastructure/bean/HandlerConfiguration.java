@@ -23,6 +23,8 @@ import com.mehmetsolak.social.application.features.post.commands.create.CreatePo
 import com.mehmetsolak.social.application.features.feed.commands.distribute.DistributePostCommand;
 import com.mehmetsolak.social.application.features.feed.commands.distribute.DistributePostCommandHandler;
 import com.mehmetsolak.social.application.features.feed.ports.FeedWriter;
+import com.mehmetsolak.social.application.features.post.commands.delete.DeletePostCommand;
+import com.mehmetsolak.social.application.features.post.commands.delete.DeletePostCommandHandler;
 import com.mehmetsolak.social.application.features.post.queries.get.GetPostQuery;
 import com.mehmetsolak.social.application.features.post.queries.get.GetPostQueryHandler;
 import com.mehmetsolak.social.application.features.post.queries.get.GetPostQueryResponse;
@@ -93,7 +95,8 @@ public class HandlerConfiguration {
             TransactionTemplate transactionTemplate
     ) {
         var handler = new FollowUserCommandHandler(userLookupPort, followRepository, domainEventPublisher);
-        return command -> transactionTemplate.execute(status -> handler.execute(command));
+        return command -> transactionTemplate.execute(
+                _ -> handler.execute(command));
     }
 
     @Bean
@@ -108,5 +111,17 @@ public class HandlerConfiguration {
             PostRepository postRepository
     ) {
         return new GetPostQueryHandler(postRepository);
+    }
+
+    @Bean
+    public CommandHandler<DeletePostCommand, Void> deletePostCommandHandler(
+            PostRepository postRepository,
+            TransactionTemplate transactionTemplate
+    ) {
+        var handler = new DeletePostCommandHandler(postRepository);
+
+        return command -> transactionTemplate.execute(
+                _ -> handler.execute(command)
+        );
     }
 }

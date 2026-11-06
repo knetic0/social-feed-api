@@ -1,5 +1,6 @@
 package com.mehmetsolak.social.domain.post.model;
 
+import com.mehmetsolak.social.application.features.post.exception.PostDeletionNotAllowedException;
 import com.mehmetsolak.social.domain.post.events.PostCreatedEvent;
 import com.mehmetsolak.social.domain.post.exception.InvalidCommentCountException;
 import com.mehmetsolak.social.domain.post.exception.InvalidLikeCountException;
@@ -110,7 +111,10 @@ public final class Post extends AggregateRoot<PostId> {
         commentCount--;
     }
 
-    public void delete() {
+    public void delete(UserId requestedBy) {
+        if (!authorId.equals(requestedBy)) {
+            throw new PostDeletionNotAllowedException("You cannot delete this post!");
+        }
         ensureNotDeleted();
         deletedAt = Instant.now();
     }
