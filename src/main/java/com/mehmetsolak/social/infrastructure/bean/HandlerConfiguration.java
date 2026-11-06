@@ -23,6 +23,9 @@ import com.mehmetsolak.social.application.features.post.commands.create.CreatePo
 import com.mehmetsolak.social.application.features.feed.commands.distribute.DistributePostCommand;
 import com.mehmetsolak.social.application.features.feed.commands.distribute.DistributePostCommandHandler;
 import com.mehmetsolak.social.application.features.feed.ports.FeedWriter;
+import com.mehmetsolak.social.application.features.post.queries.get.GetPostQuery;
+import com.mehmetsolak.social.application.features.post.queries.get.GetPostQueryHandler;
+import com.mehmetsolak.social.application.features.post.queries.get.GetPostQueryResponse;
 import com.mehmetsolak.social.application.shared.ports.CurrentUser;
 import com.mehmetsolak.social.application.shared.ports.DomainEventPublisher;
 import com.mehmetsolak.social.domain.follow.repository.FollowRepository;
@@ -98,5 +101,12 @@ public class HandlerConfiguration {
             FeedReader feedReader, PostSummaryReader postSummaryReader
     ) {
         return new GetFeedQueryHandler(feedReader, postSummaryReader);
+    }
+
+    @Bean
+    public QueryHandler<GetPostQuery, GetPostQueryResponse> getPostQueryHandler(
+            PostRepository postRepository
+    ) {
+        return new GetPostQueryHandler(postRepository);
     }
 }

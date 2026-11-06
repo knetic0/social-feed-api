@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -19,4 +20,6 @@ public interface PostJpaRepository extends JpaRepository<PostJpaEntity, UUID> {
         WHERE p.id IN (:ids) AND p.deleted_at IS NULL
         """, nativeQuery = true)
     List<PostSummaryReader.PostSummary> findSummariesByIds(@Param("ids") List<UUID> ids);
+
+    Optional<PostJpaEntity> findByIdAndDeletedAtIsNull(UUID id);
 }
