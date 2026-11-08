@@ -6,6 +6,7 @@ import com.mehmetsolak.social.application.shared.ports.DomainEventPublisher;
 import com.mehmetsolak.social.domain.follow.model.Follow;
 import com.mehmetsolak.social.domain.follow.repository.FollowRepository;
 import com.mehmetsolak.social.domain.user.repository.UserRepository;
+import com.mehmetsolak.social.domain.user.vobj.UserId;
 
 import java.util.List;
 
@@ -25,11 +26,13 @@ public class FollowUserCommandHandler implements CommandHandler<FollowUserComman
     }
 
     public Void execute(FollowUserCommand command) {
-        if (!userRepository.existsById(command.followeeId())) {
+        UserId followeeId = UserId.of(command.followeeId());
+        if (!userRepository.existsById(followeeId)) {
             throw new UserNotFoundException("User not found");
         }
 
-        var follow = Follow.of(command.followerId(), command.followeeId());
+        var followerId = UserId.of(command.followerId());
+        var follow = Follow.of(followerId, followeeId);
         if (followRepository.insertIfAbsent(follow)) {
             var events = List.copyOf(follow.getDomainEvents());
             for (var event : events) {

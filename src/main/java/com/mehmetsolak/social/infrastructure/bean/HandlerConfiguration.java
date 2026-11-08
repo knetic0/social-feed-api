@@ -16,6 +16,8 @@ import com.mehmetsolak.social.application.features.feed.queries.get.GetFeedQuery
 import com.mehmetsolak.social.application.features.feed.queries.get.GetFeedQueryResponse;
 import com.mehmetsolak.social.application.features.follow.commands.followuser.FollowUserCommand;
 import com.mehmetsolak.social.application.features.follow.commands.followuser.FollowUserCommandHandler;
+import com.mehmetsolak.social.application.features.follow.commands.unfollowuser.UnfollowUserCommand;
+import com.mehmetsolak.social.application.features.follow.commands.unfollowuser.UnfollowUserCommandHandler;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommand;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommandHandler;
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommandResponse;
@@ -104,6 +106,19 @@ public class HandlerConfiguration {
         var handler = new FollowUserCommandHandler(userRepository, followRepository, domainEventPublisher);
         return command -> transactionTemplate.execute(
                 _ -> handler.execute(command));
+    }
+
+    @Bean
+    public CommandHandler<UnfollowUserCommand, Void> unfollowUserCommandHandler(
+            UserRepository userRepository,
+            FollowRepository followRepository,
+            TransactionTemplate transactionTemplate
+    ) {
+        var handler = new UnfollowUserCommandHandler(userRepository, followRepository);
+
+        return command -> transactionTemplate.execute(
+                _ -> handler.execute(command)
+        );
     }
 
     @Bean

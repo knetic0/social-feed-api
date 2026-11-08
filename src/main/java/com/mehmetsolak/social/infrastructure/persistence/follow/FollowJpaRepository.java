@@ -40,4 +40,15 @@ public interface FollowJpaRepository extends JpaRepository<FollowJpaEntity, UUID
                        @Param("followerId") UUID followerId,
                        @Param("followeeId") UUID followeeId,
                        @Param("createdAt") Instant createdAt);
+
+    @Modifying
+    @Query(value = """
+        DELETE FROM follows
+        WHERE follower_id = :followerId
+          AND followee_id = :followeeId
+        """, nativeQuery = true)
+    int deleteIfExists(
+            @Param("followerId") UUID followerId,
+            @Param("followeeId") UUID followeeId
+    );
 }
