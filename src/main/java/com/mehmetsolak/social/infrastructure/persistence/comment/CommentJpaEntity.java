@@ -30,7 +30,7 @@ public class CommentJpaEntity {
 
     private CommentJpaEntity() {}
 
-    private CommentJpaEntity(
+    public CommentJpaEntity(
             UUID id,
             UUID userId,
             UUID postId,

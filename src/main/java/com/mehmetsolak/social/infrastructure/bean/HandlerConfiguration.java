@@ -8,6 +8,9 @@ import com.mehmetsolak.social.application.features.auth.commands.register.Regist
 import com.mehmetsolak.social.application.features.auth.commands.register.RegisterCommandHandler;
 import com.mehmetsolak.social.application.features.auth.ports.AuthenticationPort;
 import com.mehmetsolak.social.application.features.auth.ports.PasswordHasher;
+import com.mehmetsolak.social.application.features.comment.commands.create.CreateCommentCommand;
+import com.mehmetsolak.social.application.features.comment.commands.create.CreateCommentCommandHandler;
+import com.mehmetsolak.social.application.features.comment.commands.create.CreateCommentCommandResponse;
 import com.mehmetsolak.social.application.features.feed.ports.FeedReader;
 import com.mehmetsolak.social.application.features.feed.ports.FollowerReader;
 import com.mehmetsolak.social.application.features.feed.ports.PostSummaryReader;
@@ -38,6 +41,7 @@ import com.mehmetsolak.social.application.features.reaction.commands.unlikePost.
 import com.mehmetsolak.social.application.features.reaction.commands.unlikePost.UnlikePostCommandHandler;
 import com.mehmetsolak.social.application.shared.ports.CurrentUser;
 import com.mehmetsolak.social.application.shared.ports.DomainEventPublisher;
+import com.mehmetsolak.social.domain.comment.repository.CommentRepository;
 import com.mehmetsolak.social.domain.follow.repository.FollowRepository;
 import com.mehmetsolak.social.domain.post.repository.PostRepository;
 import com.mehmetsolak.social.domain.reaction.repository.ReactionRepository;
@@ -172,6 +176,18 @@ public class HandlerConfiguration {
             TransactionTemplate transactionTemplate
     ) {
         var handler = new UnlikePostCommandHandler(postRepository, reactionRepository);
+
+        return command -> transactionTemplate.execute(
+                _ -> handler.execute(command)
+        );
+    }
+
+    @Bean
+    public CommandHandler<CreateCommentCommand, CreateCommentCommandResponse> createCommentCommandHandler(
+            PostRepository postRepository, CommentRepository commentRepository,
+            TransactionTemplate transactionTemplate
+    ) {
+        var handler = new CreateCommentCommandHandler(commentRepository, postRepository);
 
         return command -> transactionTemplate.execute(
                 _ -> handler.execute(command)
