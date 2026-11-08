@@ -1,6 +1,5 @@
 package com.mehmetsolak.social.infrastructure.persistence.reaction;
 
-import com.mehmetsolak.social.domain.post.model.ReactionType;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -33,10 +32,6 @@ public class ReactionJpaEntity {
     @Column(name = "post_id", nullable = false, updatable = false)
     private UUID postId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ReactionType type;
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -46,13 +41,11 @@ public class ReactionJpaEntity {
             UUID id,
             UUID userId,
             UUID postId,
-            ReactionType type,
             Instant createdAt
     ) {
         this.id = id;
         this.userId = userId;
         this.postId = postId;
-        this.type = type;
         this.createdAt = createdAt;
     }
 
@@ -78,14 +71,6 @@ public class ReactionJpaEntity {
 
     public void setPostId(UUID postId) {
         this.postId = postId;
-    }
-
-    public ReactionType getType() {
-        return type;
-    }
-
-    public void setType(ReactionType type) {
-        this.type = type;
     }
 
     public Instant getCreatedAt() {
