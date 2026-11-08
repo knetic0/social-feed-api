@@ -184,13 +184,20 @@ public class HandlerConfiguration {
 
     @Bean
     public CommandHandler<CreateCommentCommand, CreateCommentCommandResponse> createCommentCommandHandler(
-            PostRepository postRepository, CommentRepository commentRepository,
-            TransactionTemplate transactionTemplate
+            PostRepository postRepository,
+            CommentRepository commentRepository,
+            CurrentUser currentUser,
+            PostgresIdempotencyExecutor postgresIdempotencyExecutor,
+            JsonMapper jsonMapper
     ) {
         var handler = new CreateCommentCommandHandler(commentRepository, postRepository);
 
-        return command -> transactionTemplate.execute(
-                _ -> handler.execute(command)
-        );
+        return new IdempotentCommandHandler<>(
+                handler,
+                "comment.create",
+                CreateCommentCommandResponse.class,
+                currentUser,
+                postgresIdempotencyExecutor,
+                jsonMapper);
     }
 }

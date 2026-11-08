@@ -40,13 +40,16 @@ public class CommentController {
     )
     @PostMapping
     public ResponseEntity<Void> create(
-            @PathVariable UUID postId, @RequestBody CreateCommentRequest request
+            @PathVariable UUID postId,
+            @RequestHeader("Idempotency-Key") String idempotencyKey,
+            @RequestBody CreateCommentRequest request
     ) {
         var userId = currentUser.getCurrentUserId();
         var command = new CreateCommentCommand(
                 userId,
                 postId,
-                request.body()
+                request.body(),
+                idempotencyKey
         );
         var result = createCommentCommandHandler.execute(command);
         return ResponseEntity.created(
