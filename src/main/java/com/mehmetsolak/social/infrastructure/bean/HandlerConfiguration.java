@@ -30,10 +30,13 @@ import com.mehmetsolak.social.application.features.post.queries.get.GetPostQuery
 import com.mehmetsolak.social.application.features.post.queries.list.GetPostsQuery;
 import com.mehmetsolak.social.application.features.post.queries.list.GetPostsQueryHandler;
 import com.mehmetsolak.social.application.features.post.queries.list.GetPostsQueryResponse;
+import com.mehmetsolak.social.application.features.reaction.commands.likePost.LikePostCommand;
+import com.mehmetsolak.social.application.features.reaction.commands.likePost.LikePostCommandHandler;
 import com.mehmetsolak.social.application.shared.ports.CurrentUser;
 import com.mehmetsolak.social.application.shared.ports.DomainEventPublisher;
 import com.mehmetsolak.social.domain.follow.repository.FollowRepository;
 import com.mehmetsolak.social.domain.post.repository.PostRepository;
+import com.mehmetsolak.social.domain.reaction.repository.ReactionRepository;
 import com.mehmetsolak.social.domain.user.repository.UserRepository;
 import com.mehmetsolak.social.infrastructure.idempotency.IdempotentCommandHandler;
 import com.mehmetsolak.social.infrastructure.idempotency.PostgresIdempotencyExecutor;
@@ -132,5 +135,17 @@ public class HandlerConfiguration {
             PostRepository postRepository
     ) {
         return new GetPostsQueryHandler(postRepository);
+    }
+
+    @Bean
+    public CommandHandler<LikePostCommand, Void> likePostCommandHandler(
+            PostRepository postRepository, ReactionRepository reactionRepository,
+            TransactionTemplate transactionTemplate
+    ) {
+        var handler = new LikePostCommandHandler(postRepository, reactionRepository);
+
+        return command -> transactionTemplate.execute(
+                _ -> handler.execute(command)
+        );
     }
 }
