@@ -6,10 +6,7 @@ import com.mehmetsolak.social.application.shared.ports.CurrentUser;
 import com.mehmetsolak.social.domain.user.vobj.UserId;
 import com.mehmetsolak.social.presentation.security.Authenticated;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -28,7 +25,7 @@ public class FollowController {
         this.currentUser = currentUser;
     }
 
-    @PostMapping("/{userId}/follow")
+    @PutMapping("/{userId}/follow")
     public ResponseEntity<Void> follow(@PathVariable UUID userId) {
         var command = new FollowUserCommand(
                 UserId.of(currentUser.getCurrentUserId()),
