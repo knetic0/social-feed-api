@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
-public class PostSummaryReaderImpl implements PostSummaryReader {
+public class JpaPostSummaryReaderImpl implements PostSummaryReader {
 
     private final PostJpaRepository repository;
 
-    public PostSummaryReaderImpl(PostJpaRepository repository) {
+    public JpaPostSummaryReaderImpl(PostJpaRepository repository) {
         this.repository = repository;
     }
 
