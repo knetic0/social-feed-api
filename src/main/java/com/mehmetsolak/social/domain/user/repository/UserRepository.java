@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface UserRepository {
     Optional<User> findByHandle(Handle handle);
+    Optional<User> findById(UserId id);
     boolean existsByHandle(Handle handle);
     boolean existsById(UserId userId);
     void save(User user);

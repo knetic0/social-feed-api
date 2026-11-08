@@ -95,9 +95,9 @@ public class HandlerConfiguration {
 
     @Bean
     public CommandHandler<DistributePostCommand, Void> distributePostCommandHandler(
-            FeedWriter feedWriter, FollowerReader followerReader
+            FeedWriter feedWriter, FollowerReader followerReader, UserRepository userRepository
     ) {
-        return new DistributePostCommandHandler(feedWriter, followerReader);
+        return new DistributePostCommandHandler(feedWriter, followerReader, userRepository);
     }
 
     @Bean

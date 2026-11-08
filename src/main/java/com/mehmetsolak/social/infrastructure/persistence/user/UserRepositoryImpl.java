@@ -25,6 +25,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<User> findById(UserId id) {
+        return repository.findById(id.value()).map(mapper::toDomain);
+    }
+
+    @Override
     public boolean existsByHandle(Handle handle) {
         return repository.existsByHandle(handle.value());
     }
