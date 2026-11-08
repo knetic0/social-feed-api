@@ -32,6 +32,8 @@ import com.mehmetsolak.social.application.features.post.queries.list.GetPostsQue
 import com.mehmetsolak.social.application.features.post.queries.list.GetPostsQueryResponse;
 import com.mehmetsolak.social.application.features.reaction.commands.likePost.LikePostCommand;
 import com.mehmetsolak.social.application.features.reaction.commands.likePost.LikePostCommandHandler;
+import com.mehmetsolak.social.application.features.reaction.commands.unlikePost.UnlikePostCommand;
+import com.mehmetsolak.social.application.features.reaction.commands.unlikePost.UnlikePostCommandHandler;
 import com.mehmetsolak.social.application.shared.ports.CurrentUser;
 import com.mehmetsolak.social.application.shared.ports.DomainEventPublisher;
 import com.mehmetsolak.social.domain.follow.repository.FollowRepository;
@@ -143,6 +145,18 @@ public class HandlerConfiguration {
             TransactionTemplate transactionTemplate
     ) {
         var handler = new LikePostCommandHandler(postRepository, reactionRepository);
+
+        return command -> transactionTemplate.execute(
+                _ -> handler.execute(command)
+        );
+    }
+
+    @Bean
+    public CommandHandler<UnlikePostCommand, Void> unlikePostCommandHandler(
+            PostRepository postRepository, ReactionRepository reactionRepository,
+            TransactionTemplate transactionTemplate
+    ) {
+        var handler = new UnlikePostCommandHandler(postRepository, reactionRepository);
 
         return command -> transactionTemplate.execute(
                 _ -> handler.execute(command)

@@ -7,4 +7,5 @@ import java.util.UUID;
 
 @Repository
 public interface ReactionJpaRepository extends JpaRepository<ReactionJpaEntity, UUID> {
+    void deleteByUserIdAndPostId(UUID userId, UUID postId);
 }

@@ -5,12 +5,18 @@ import com.mehmetsolak.social.application.features.feed.queries.get.GetFeedQuery
 import com.mehmetsolak.social.application.features.feed.queries.get.GetFeedQueryResponse;
 import com.mehmetsolak.social.application.shared.ports.CurrentUser;
 import com.mehmetsolak.social.presentation.api.feed.dtos.response.FeedResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(
+        name = "Feed",
+        description = "Feed API's"
+)
 @RestController
 @RequestMapping("/api/v1/feed")
 public class FeedController {
@@ -23,6 +29,10 @@ public class FeedController {
         this.currentUser = currentUser;
     }
 
+    @Operation(
+            summary = "Feed API",
+            description = "Feed API, find from redis for current user and get details"
+    )
     @GetMapping
     public ResponseEntity<FeedResponse> feed(
             @RequestParam(defaultValue = "20") int size,
