@@ -4,6 +4,7 @@ import com.mehmetsolak.social.application.shared.exception.*;
 import com.mehmetsolak.social.domain.shared.exceptions.DomainConflictException;
 import com.mehmetsolak.social.domain.shared.exceptions.DomainNotAllowedException;
 import com.mehmetsolak.social.domain.shared.exceptions.DomainValidationException;
+import com.mehmetsolak.social.presentation.security.ratelimit.LoginAttemptExceededException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -103,6 +104,13 @@ public class GlobalExceptionHandler {
     ProblemDetail handleNotAllowedException(DomainNotAllowedException exception) {
         return ProblemDetail.forStatusAndDetail(
                 HttpStatus.FORBIDDEN, exception.getMessage()
+        );
+    }
+
+    @ExceptionHandler(LoginAttemptExceededException.class)
+    ProblemDetail handleLoginAttemptExceededException(LoginAttemptExceededException exception) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.UNAUTHORIZED, exception.getMessage()
         );
     }
 }

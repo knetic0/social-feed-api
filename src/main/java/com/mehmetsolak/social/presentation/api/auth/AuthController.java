@@ -5,6 +5,7 @@ import com.mehmetsolak.social.application.features.auth.commands.login.LoginComm
 import com.mehmetsolak.social.application.features.auth.commands.register.RegisterCommand;
 import com.mehmetsolak.social.presentation.api.auth.dtos.request.LoginRequest;
 import com.mehmetsolak.social.presentation.api.auth.dtos.request.RegisterRequest;
+import com.mehmetsolak.social.presentation.security.ratelimit.LoginRateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -55,6 +56,7 @@ public class AuthController {
             description = "Login with existing account",
             security = {}
     )
+    @LoginRateLimiter
     @PostMapping("/login")
     public ResponseEntity<Void> login(
             @Valid @RequestBody LoginRequest request) {
