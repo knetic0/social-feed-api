@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,6 +21,25 @@ public interface PostJpaRepository extends JpaRepository<PostJpaEntity, UUID> {
         WHERE p.id IN (:ids) AND p.deleted_at IS NULL
         """, nativeQuery = true)
     List<PostSummaryReader.PostSummary> findSummariesByIds(@Param("ids") List<UUID> ids);
+
+    @Query(value = """
+    SELECT p.id AS postId, p.author_id AS authorId, u.handle AS authorHandle,
+           p.body AS body, p.created_at AS createdAt,
+           p.like_count AS likeCount, p.comment_count AS commentCount
+    FROM posts p JOIN users u ON u.id = p.author_id
+    WHERE p.author_id IN (:authorIds) AND p.deleted_at IS NULL
+      AND (
+            CAST(:cursor AS timestamptz) IS NULL
+            OR p.created_at < CAST(:cursor AS timestamptz)
+        )
+    ORDER BY p.created_at DESC
+    LIMIT :limit
+    """, nativeQuery = true)
+    List<PostSummaryReader.PostSummary> findRecentByAuthorIds(
+            @Param("authorIds") List<UUID> authorIds,
+            @Param("cursor") Instant cursor,
+            @Param("limit") int limit
+    );
 
     Optional<PostJpaEntity> findByIdAndDeletedAtIsNull(UUID id);
 

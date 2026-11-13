@@ -11,9 +11,7 @@ import com.mehmetsolak.social.application.features.auth.ports.PasswordHasher;
 import com.mehmetsolak.social.application.features.comment.commands.create.CreateCommentCommand;
 import com.mehmetsolak.social.application.features.comment.commands.create.CreateCommentCommandHandler;
 import com.mehmetsolak.social.application.features.comment.commands.create.CreateCommentCommandResponse;
-import com.mehmetsolak.social.application.features.feed.ports.FeedReader;
-import com.mehmetsolak.social.application.features.feed.ports.FollowerReader;
-import com.mehmetsolak.social.application.features.feed.ports.PostSummaryReader;
+import com.mehmetsolak.social.application.features.feed.ports.*;
 import com.mehmetsolak.social.application.features.feed.queries.get.GetFeedQuery;
 import com.mehmetsolak.social.application.features.feed.queries.get.GetFeedQueryHandler;
 import com.mehmetsolak.social.application.features.feed.queries.get.GetFeedQueryResponse;
@@ -26,7 +24,6 @@ import com.mehmetsolak.social.application.features.post.commands.create.CreatePo
 import com.mehmetsolak.social.application.features.post.commands.create.CreatePostCommandResponse;
 import com.mehmetsolak.social.application.features.feed.commands.distribute.DistributePostCommand;
 import com.mehmetsolak.social.application.features.feed.commands.distribute.DistributePostCommandHandler;
-import com.mehmetsolak.social.application.features.feed.ports.FeedWriter;
 import com.mehmetsolak.social.application.features.post.commands.delete.DeletePostCommand;
 import com.mehmetsolak.social.application.features.post.commands.delete.DeletePostCommandHandler;
 import com.mehmetsolak.social.application.features.post.queries.get.GetPostQuery;
@@ -127,9 +124,9 @@ public class HandlerConfiguration {
 
     @Bean
     public QueryHandler<GetFeedQuery, GetFeedQueryResponse> getFeedQueryHandler(
-            FeedReader feedReader, PostSummaryReader postSummaryReader
+            FeedReader feedReader, PostSummaryReader postSummaryReader, CelebrityReader celebrityReader
     ) {
-        return new GetFeedQueryHandler(feedReader, postSummaryReader);
+        return new GetFeedQueryHandler(feedReader, postSummaryReader, celebrityReader);
     }
 
     @Bean

@@ -51,4 +51,23 @@ public interface FollowJpaRepository extends JpaRepository<FollowJpaEntity, UUID
             @Param("followerId") UUID followerId,
             @Param("followeeId") UUID followeeId
     );
+
+    @Query(value = """
+        SELECT f.followee_id
+        FROM follows f
+        JOIN users u ON u.id = f.followee_id
+        WHERE f.follower_id = :followerId
+          AND u.is_celebrity = true
+          AND (
+              CAST(:cursor AS uuid) IS NULL
+              OR f.followee_id > CAST(:cursor AS uuid)
+          )
+        ORDER BY f.followee_id
+        LIMIT :limit
+        """, nativeQuery = true)
+    List<UUID> findCelebrityFolloweeIds(
+            @Param("followerId") UUID followerId,
+            @Param("cursor") UUID cursor,
+            @Param("limit") int limit
+    );
 }

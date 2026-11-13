@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
-public class FollowReaderImpl implements FollowerReader {
+public class JpaFollowReaderImpl implements FollowerReader {
 
     private final FollowJpaRepository repository;
 
-    public FollowReaderImpl(FollowJpaRepository repository) {
+    public JpaFollowReaderImpl(FollowJpaRepository repository) {
         this.repository = repository;
     }
 

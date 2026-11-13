@@ -7,6 +7,8 @@ import java.util.UUID;
 public interface PostSummaryReader {
     List<PostSummary> findByIds(List<UUID> postIds);
 
+    List<PostSummary> findRecentByAuthorIds(List<UUID> authorIds, Instant cursor, int limit);
+
     record PostSummary(
             UUID postId, UUID authorId, String authorHandle,
             String body, Instant createdAt, long likeCount, long commentCount
