@@ -8,9 +8,7 @@ import com.mehmetsolak.social.application.features.feed.ports.PostSummaryReader;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GetFeedQueryHandler implements QueryHandler<GetFeedQuery, GetFeedQueryResponse> {
@@ -65,9 +63,9 @@ public class GetFeedQueryHandler implements QueryHandler<GetFeedQuery, GetFeedQu
         if (merged.isEmpty())
             return new GetFeedQueryResponse(List.of(), null);
 
-        Long nextCursor = entries.size() < query.size()
+        Long nextCursor = merged.size() < query.size()
                 ? null
-                : entries.getLast().createdAt().toEpochMilli();
+                : merged.getLast().createdAt().toEpochMilli();
 
         return new GetFeedQueryResponse(merged, nextCursor);
     }
